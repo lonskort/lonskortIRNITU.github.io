@@ -33,7 +33,7 @@ async function shrink(file) {
   const c = document.createElement('canvas');
   c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
   c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
-  return c.toDataURL('image/jpeg', 0.8).split(',')[1];
+  return c.toDataURL('image/jpeg', 0.76).split(',')[1];
 }
 const headers = () => ({ 'content-type': 'application/json', 'x-admin-password': $('pw').value });
 
