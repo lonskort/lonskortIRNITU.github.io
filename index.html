@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#0d060a">
   <script>
     (function () {
-      var r = document.documentElement, t = 'sakura', g = 'on', f = 'md', m = 'on', c = 'off', te = 'on', ro = 'on';
+      var r = document.documentElement, t = 'sakura', g = 'on', f = 'md', m = 'on', c = 'off', te = 'on', ro = 'on', ff = 'custom';
       try {
         var st = JSON.parse(localStorage.getItem('ksk-settings') || '{}');
         if (typeof st.theme === 'string' && /^[a-z]+$/.test(st.theme)) t = st.theme;
@@ -17,9 +17,10 @@
         if (st.compact === true) c = 'on';
         if (st.teachers === false) te = 'off';
         if (st.rooms === false) ro = 'off';
+        if (st.fontFamily === 'system') ff = 'system';
       } catch (e) {}
       r.dataset.theme = t; r.dataset.glass = g; r.dataset.fs = f; r.dataset.motion = m;
-      r.dataset.compact = c; r.dataset.teachers = te; r.dataset.rooms = ro;
+      r.dataset.compact = c; r.dataset.teachers = te; r.dataset.rooms = ro; r.dataset.ff = ff;
     })();
   </script>
   <style id="tw">*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.19 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:tran
@@ -346,6 +347,10 @@ ayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia
     /* Скрыть преподавателей / аудитории */
     html[data-teachers="off"] .js-teacher { display: none; }
     html[data-rooms="off"] .js-room { display: none; }
+    html[data-ff="system"] body, html[data-ff="system"] h1, html[data-ff="system"] h2, html[data-ff="system"] h3,
+    html[data-ff="system"] .font-heading, html[data-ff="system"] .jp-title, html[data-ff="system"] .gm-title, html[data-ff="system"] .gm-name {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
 
     /* Без анимаций */
     html[data-motion="off"] .liquid-blob { animation: none; }
@@ -503,6 +508,13 @@ ayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia
       <section>
         <h3 class="text-xs uppercase tracking-wider font-semibold text-rose-200/70 mb-3">Отображение</h3>
         <div class="space-y-3">
+          <div class="p-3.5 rounded-2xl border border-pink-300/20 bg-pink-500/10">
+            <div class="font-semibold text-rose-50 mb-2">Шрифт</div>
+            <div id="ff-seg" class="seg" role="group" aria-label="Шрифт">
+              <button type="button" data-value="custom" aria-pressed="true">Мой (SF Pro)</button>
+              <button type="button" data-value="system" aria-pressed="false">Системный</button>
+            </div>
+          </div>
           <div class="p-3.5 rounded-2xl border border-pink-300/20 bg-pink-500/10">
             <div class="font-semibold text-rose-50 mb-2">Размер текста</div>
             <div id="fs-seg" class="seg" role="group" aria-label="Размер текста">
@@ -957,7 +969,7 @@ ${item.replaced ? '<span class="text-[10px] font-semibold px-2 py-0.5 rounded-fu
       { id: 'amethyst', name: 'Аметист', bg: '#0b0613', c1: '#c084fc', c2: '#f472b6' },
       { id: 'cloud',    name: 'Облако',  bg: '#eef1fa', c1: '#6366f1', c2: '#f472b6', light: true }
     ];
-    const DEFAULT_SETTINGS = { theme: 'sakura', glass: true, fontSize: 'md', motion: true, compact: false, teachers: true, rooms: true, askGroup: false };
+    const DEFAULT_SETTINGS = { theme: 'sakura', glass: true, fontSize: 'md', motion: true, compact: false, teachers: true, rooms: true, askGroup: false, fontFamily: 'custom' };
     const BOOL_KEYS = ['glass', 'motion', 'compact', 'teachers', 'rooms', 'askGroup'];
     let settings = { ...DEFAULT_SETTINGS };
 
@@ -967,6 +979,7 @@ ${item.replaced ? '<span class="text-[10px] font-semibold px-2 py-0.5 rounded-fu
         if (THEMES.some(t => t.id === st.theme)) settings.theme = st.theme;
         BOOL_KEYS.forEach(k => { if (typeof st[k] === 'boolean') settings[k] = st[k]; });
         if (['sm', 'md', 'lg'].includes(st.fontSize)) settings.fontSize = st.fontSize;
+        if (['custom', 'system'].includes(st.fontFamily)) settings.fontFamily = st.fontFamily;
       } catch (e) {}
     }
     function saveSettings() {
@@ -983,6 +996,7 @@ ${item.replaced ? '<span class="text-[10px] font-semibold px-2 py-0.5 rounded-fu
       root.dataset.compact = settings.compact ? 'on' : 'off';
       root.dataset.teachers = settings.teachers ? 'on' : 'off';
       root.dataset.rooms = settings.rooms ? 'on' : 'off';
+      root.dataset.ff = settings.fontFamily;
       root.style.colorScheme = t.light ? 'light' : 'dark';
       const meta = document.querySelector('meta[name="theme-color"]');
       if (meta) meta.setAttribute('content', t.bg);
@@ -995,6 +1009,9 @@ ${item.replaced ? '<span class="text-[10px] font-semibold px-2 py-0.5 rounded-fu
       });
       document.querySelectorAll('#fs-seg button').forEach(b => {
         b.setAttribute('aria-pressed', b.dataset.value === settings.fontSize ? 'true' : 'false');
+      });
+      document.querySelectorAll('#ff-seg button').forEach(b => {
+        b.setAttribute('aria-pressed', b.dataset.value === settings.fontFamily ? 'true' : 'false');
       });
     }
 
@@ -1050,6 +1067,13 @@ ${item.replaced ? '<span class="text-[10px] font-semibold px-2 py-0.5 rounded-fu
       document.querySelectorAll('#fs-seg button').forEach(b => {
         b.addEventListener('click', () => {
           settings.fontSize = b.dataset.value;
+          saveSettings();
+          applySettings();
+        });
+      });
+      document.querySelectorAll('#ff-seg button').forEach(b => {
+        b.addEventListener('click', () => {
+          settings.fontFamily = b.dataset.value;
           saveSettings();
           applySettings();
         });
