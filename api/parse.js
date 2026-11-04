@@ -1,7 +1,7 @@
 const { authed } = require('./_store');
 
 // Название группы из таблицы -> id группы на сайте
-const GROUPS = { 'мкск251': 'ksk-25-1', 'мкск252': 'ksk-25-2' };
+const GROUPS = { 'мкск251': 'ksk-25-1', 'мкск252': 'ksk-25-2', 'мбу251': 'bu-25-1' };
 const norm = (s) => String(s || '').toLowerCase()
   .replace(/k/g, 'к').replace(/c/g, 'с').replace(/m/g, 'м')
   .replace(/[^а-яa-z0-9]/g, '');
