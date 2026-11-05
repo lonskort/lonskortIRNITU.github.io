@@ -30,7 +30,27 @@ module.exports = async (req, res) => {
 
   const mt = media_type || 'image/jpeg';
   let text;
-  if (process.env.GEMINI_API_KEY) {
+  if (process.env.OPENAI_API_KEY) {
+    const r = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+        max_completion_tokens: 6000,
+        temperature: 0,
+        messages: [{ role: 'user', content: [
+          { type: 'text', text: PROMPT },
+          { type: 'image_url', image_url: { url: `data:${mt};base64,${image}` } },
+        ] }],
+      }),
+    });
+    const data = await r.json();
+    if (!r.ok) return res.status(502).json({ error: data.error?.message || 'Ошибка OpenAI API' });
+    text = data.choices?.[0]?.message?.content || '';
+  } else if (process.env.GEMINI_API_KEY) {
     const model = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
     const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
       method: 'POST',
