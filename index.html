@@ -453,6 +453,9 @@
     .gm-head { text-align: center; padding: .6rem 0 1.2rem; }
     .gm-title { font-size: 1.9rem; font-weight: 800; letter-spacing: -.03em; line-height: 1.15; margin-top: .3rem; }
     .gm-sub { margin-top: .5rem; font-size: .88rem; color: rgb(var(--text) / .62); }
+    .gm-seg { margin: 0 0 1rem; }
+    .gm-seg button { min-height: 2.7rem; font-size: .92rem; }
+    .gm-empty { padding: 1.6rem 1rem; text-align: center; font-size: .92rem; line-height: 1.45; color: rgb(var(--text) / .62); border: 1px dashed rgb(var(--line)); border-radius: 1.2rem; }
     .gm-list { display: flex; flex-direction: column; gap: .7rem; }
     .gm-btn { display: flex; align-items: center; justify-content: space-between; gap: .75rem; width: 100%; text-align: left; padding: 1rem 1.1rem; border-radius: 1.2rem; background: rgb(var(--text) / .06); border: 1px solid rgb(var(--line)); transition: transform .2s var(--ease), border-color .2s ease, background-color .2s ease; }
     .gm-btn:active { transform: scale(.98); }
@@ -553,8 +556,12 @@
       <div class="grabber"></div>
       <div class="gm-head">
         <span class="eyebrow">Расписание занятий</span>
-        <h2 id="group-menu-title" class="gm-title">Выберите группу</h2>
-        <p class="gm-sub">2 курс, 1 семестр 2026–2027 учебного года</p>
+        <h2 id="group-menu-title" class="gm-title">Выберите курс и группу</h2>
+        <p class="gm-sub">1 семестр 2026–2027 учебного года</p>
+      </div>
+      <div id="course-seg" class="seg gm-seg" role="group" aria-label="Курс">
+        <button type="button" data-course="1" aria-pressed="false">1 курс</button>
+        <button type="button" data-course="2" aria-pressed="true">2 курс</button>
       </div>
       <div id="group-list" class="gm-list"></div>
       <p class="gm-foot">Выбор сохранится на этом устройстве. Сменить группу можно в шапке расписания.</p>
@@ -1335,23 +1342,23 @@ const SCHEDULE_MTOE_25_1 = {
     const ALWAYS_SHOW_MENU = false;
     // Чтобы добавить группу: 1) объявите расписание выше (const SCHEDULE_xxx = {top:{}, bottom:{}}),
     // 2) добавьте строку сюда, 3) добавьте её же в api/parse.js (GROUPS), чтобы отслеживались замены.
-    // id должен совпадать с id в api/parse.js.
+    // id должен совпадать с id в api/parse.js. course: 1 или 2 — в каком курсе показывать группу в меню.
     const SPEC_KSK = 'Компьютерные системы и комплексы';
     const SPEC_BU = 'Бухгалтерский учёт';
     const SPEC_ISPR = 'Информационные системы и программирование';
     const SPEC_MTOE = 'Монтаж, техническое обслуживание и ремонт промышленного оборудования';
     const SPEC_SPR = 'Сварочное производство';
     const GROUPS = [
-      { id: 'ksk-25-1', name: 'мКСК25-1', spec: SPEC_KSK, data: SCHEDULE_25_1 },
-      { id: 'ksk-25-2', name: 'мКСК25-2', spec: SPEC_KSK, data: SCHEDULE_25_2 },
-      { id: 'bu-25-1', name: 'мБУ25-1', spec: SPEC_BU, data: SCHEDULE_BU_25_1 },
-      { id: 'bup-25-1', name: 'мБУп25-1', spec: SPEC_BU, data: SCHEDULE_BUP_25_1 },
-      { id: 'ispr-25-1', name: 'мИСПР25-1', spec: SPEC_ISPR, data: SCHEDULE_ISPR_25_1 },
-      { id: 'ispr-25-2', name: 'мИСПР25-2', spec: SPEC_ISPR, data: SCHEDULE_ISPR_25_2 },
-      { id: 'ispr-25-3', name: 'мИСПР25-3', spec: SPEC_ISPR, data: SCHEDULE_ISPR_25_3 },
-      { id: 'mtoe-25-1', name: 'мМТОЭ25-1', spec: SPEC_MTOE, data: SCHEDULE_MTOE_25_1 },
-      { id: 'mtoe-25-2', name: 'мМТОЭ25-2', spec: SPEC_MTOE, data: SCHEDULE_MTOE_25_2 },
-      { id: 'spr-25-1', name: 'мСПР25-1', spec: SPEC_SPR, data: SCHEDULE_SPR_25_1 },
+      { id: 'ksk-25-1', name: 'мКСК25-1', spec: SPEC_KSK, data: SCHEDULE_25_1, course: 2 },
+      { id: 'ksk-25-2', name: 'мКСК25-2', spec: SPEC_KSK, data: SCHEDULE_25_2, course: 2 },
+      { id: 'bu-25-1', name: 'мБУ25-1', spec: SPEC_BU, data: SCHEDULE_BU_25_1, course: 2 },
+      { id: 'bup-25-1', name: 'мБУп25-1', spec: SPEC_BU, data: SCHEDULE_BUP_25_1, course: 2 },
+      { id: 'ispr-25-1', name: 'мИСПР25-1', spec: SPEC_ISPR, data: SCHEDULE_ISPR_25_1, course: 2 },
+      { id: 'ispr-25-2', name: 'мИСПР25-2', spec: SPEC_ISPR, data: SCHEDULE_ISPR_25_2, course: 2 },
+      { id: 'ispr-25-3', name: 'мИСПР25-3', spec: SPEC_ISPR, data: SCHEDULE_ISPR_25_3, course: 2 },
+      { id: 'mtoe-25-1', name: 'мМТОЭ25-1', spec: SPEC_MTOE, data: SCHEDULE_MTOE_25_1, course: 2 },
+      { id: 'mtoe-25-2', name: 'мМТОЭ25-2', spec: SPEC_MTOE, data: SCHEDULE_MTOE_25_2, course: 2 },
+      { id: 'spr-25-1', name: 'мСПР25-1', spec: SPEC_SPR, data: SCHEDULE_SPR_25_1, course: 2 },
     ];
 
 
@@ -1763,9 +1770,17 @@ const SCHEDULE_MTOE_25_1 = {
       document.title = 'Расписание | ' + g.name;
       lastSig = '';
     }
+    // Курс, который сейчас открыт в меню (1 или 2)
+    let menuCourse = 2;
     function renderGroupMenu() {
       const list = $('group-list');
-      list.innerHTML = GROUPS.map((g) => `
+      document.querySelectorAll('#course-seg button').forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.course) === menuCourse)));
+      const items = GROUPS.filter((g) => g.course === menuCourse);
+      if (!items.length) {
+        list.innerHTML = `<p class="gm-empty">Расписание ${menuCourse} курса пока не добавлено.</p>`;
+        return;
+      }
+      list.innerHTML = items.map((g) => `
         <button type="button" class="gm-btn ${g.id === currentGroupId ? 'current' : ''}" data-group-id="${g.id}">
           <span><span class="gm-name">${esc(g.name)}</span><span class="gm-meta">${esc(g.spec || '')}</span></span>
           ${g.id === currentGroupId ? '<span class="gm-badge">Текущая</span>' : ''}
@@ -1774,11 +1789,13 @@ const SCHEDULE_MTOE_25_1 = {
     }
     function showGroupMenu() {
       lastFocus = document.activeElement;
+      const cur = GROUPS.find((g) => g.id === currentGroupId);
+      menuCourse = cur ? cur.course : 2;
       renderGroupMenu();
       $('group-menu').classList.add('open');
       document.documentElement.classList.add('modal-open');
       setBackgroundInert(true);
-      const first = document.querySelector('#group-list .gm-btn');
+      const first = document.querySelector('#group-list .gm-btn') || document.querySelector('#course-seg button[aria-pressed="true"]');
       if (first) first.focus();
     }
     function hideGroupMenu() {
@@ -1812,6 +1829,10 @@ const SCHEDULE_MTOE_25_1 = {
       $('today-btn').addEventListener('click', goToday);
       $('change-group-btn').addEventListener('click', showGroupMenu);
       $('group-scrim').addEventListener('click', () => { if (loadGroupId()) hideGroupMenu(); });
+      document.querySelectorAll('#course-seg button').forEach((b) => b.addEventListener('click', () => {
+        menuCourse = Number(b.dataset.course);
+        renderGroupMenu();
+      }));
       if (!savedGroup || ALWAYS_SHOW_MENU || settings.askGroup) showGroupMenu();
 
       // Клавиатура: Esc закрывает окна, стрелки листают дни
