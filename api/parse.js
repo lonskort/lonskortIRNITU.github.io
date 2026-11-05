@@ -22,11 +22,6 @@ const PROMPT = `На изображении таблица замен в рас�
 Если в новой части написано «Пары нет», то "to": null.
 Текст переносить точно как в таблице. Аудитории вида 21-49: если номер разбит переносом строки ("22-" и "214"), склей в "22-214". Ничего не выдумывай, пустые ячейки — пустая строка.`;
 
-// Модели по умолчанию (по приоритету). Перегрузка (503/429) -> повтор -> следующая модель.
-const DEFAULT_GEMINI_MODELS = ['gemini-3.8-flash', 'gemini-3.1-flash-lite', 'gemini-2.5-flash'];
-const RETRYABLE = new Set([429, 500, 502, 503, 504]);
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).end();
   if (!authed(req)) return res.status(401).json({ error: 'Неверный пароль' });
@@ -36,54 +31,18 @@ module.exports = async (req, res) => {
   const mt = media_type || 'image/jpeg';
   let text;
   if (process.env.GEMINI_API_KEY) {
-    // GEMINI_MODEL может содержать несколько моделей через запятую: порядок = приоритет.
-    const models = (process.env.GEMINI_MODEL || DEFAULT_GEMINI_MODELS.join(','))
-      .split(',').map((m) => m.trim()).filter(Boolean);
-    const body = JSON.stringify({
-      contents: [{ parts: [{ inlineData: { mimeType: mt, data: image } }, { text: PROMPT }] }],
-      generationConfig: { responseMimeType: 'application/json', temperature: 0 },
+    const model = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY },
+      body: JSON.stringify({
+        contents: [{ parts: [{ inlineData: { mimeType: mt, data: image } }, { text: PROMPT }] }],
+        generationConfig: { responseMimeType: 'application/json', temperature: 0 },
+      }),
     });
-    let lastErr = '';
-    let overloaded = false;
-    outer:
-    for (const model of models) {
-      for (let attempt = 0; attempt < 2; attempt++) {
-        let r, data;
-        try {
-          r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-            method: 'POST',
-            headers: { 'content-type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY },
-            body,
-          });
-          data = await r.json();
-        } catch (e) {
-          lastErr = String(e.message || e);
-          overloaded = true;
-          await sleep(1000);
-          continue;
-        }
-        if (r.ok) {
-          text = (data.candidates?.[0]?.content?.parts || []).map((p) => p.text || '').join('');
-          if (text) break outer;
-          lastErr = 'Пустой ответ модели ' + model;
-          break; // пробуем следующую модель
-        }
-        lastErr = data.error?.message || `Ошибка Gemini API (${r.status})`;
-        if (RETRYABLE.has(r.status)) {
-          overloaded = true;
-          if (attempt === 0) { await sleep(1500); continue; } // один повтор той же модели
-          break; // затем следующая модель
-        }
-        break; // 400/403/404 и т.п.: эта модель недоступна, пробуем следующую
-      }
-    }
-    if (!text) {
-      return res.status(502).json({
-        error: overloaded
-          ? 'Модели Gemini сейчас перегружены. Подождите минуту и нажмите «Распознать» ещё раз.'
-          : lastErr || 'Ошибка Gemini API',
-      });
-    }
+    const data = await r.json();
+    if (!r.ok) return res.status(502).json({ error: data.error?.message || 'Ошибка Gemini API' });
+    text = (data.candidates?.[0]?.content?.parts || []).map((p) => p.text || '').join('');
   } else {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
